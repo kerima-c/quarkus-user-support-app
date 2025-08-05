@@ -3,6 +3,7 @@ package com.kaldi.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "user")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class User {
     private Long id;

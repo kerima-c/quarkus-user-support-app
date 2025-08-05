@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
+@Table(name = "conversation")
 public class Conversation {
     private Long id;
     private Customer customer;

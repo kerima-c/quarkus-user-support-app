@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
+@Table(name = "message")
 public class Message {
     private Long id;
     private User sender;
