@@ -1,61 +1,110 @@
-# customer-support-app
+# User Support App (Quarkus + MySQL)
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+This is a REST API backend for a user support application. It allows customers to send messages in different "rooms" and operators to respond via a web interface. It is built using **Quarkus** and uses **MySQL** as its database.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+---
 
-## Running the application in dev mode
+## Features
 
-You can run your application in dev mode that enables live coding using:
+- Two user roles: `CUSTOMER` and `OPERATOR`
+- Users can:
+    - View rooms
+    - Start conversations
+    - Send and receive messages
+- Operators can:
+    - View pending/taken conversations
+    - Take over pending conversations
+    - Reply to messages
+- HTTP Basic authentication
+- OpenAPI/Swagger documentation
+- Dockerized setup
 
-```shell script
-./mvnw quarkus:dev
+---
+
+## Running the App via Docker
+
+### Prerequisites
+
+- Docker
+- Docker Compose
+
+### Steps
+
+1. Build the Quarkus application:
+
+```bash
+./mvnw clean package -DskipTests
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+2. Start the services:
 
-## Packaging and running the application
-
-The application can be packaged using:
-
-```shell script
-./mvnw package
+```bash
+docker-compose up --build
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+> This will:
+> - Launch a MySQL database
+> - Run the Quarkus app on `http://localhost:8080`
+> - Create initial users in the database via `import.sql`
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+---
 
-If you want to build an _über-jar_, execute the following command:
+## API Testing
 
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
+### Swagger UI (OpenAPI)
+
+After the app starts, open:
+
+**[http://localhost:8080/q/swagger-ui](http://localhost:8080/q/swagger-ui)**
+
+Here you can check all the endpoints and test the API interactively.
+
+---
+
+### Postman Collection
+
+You can also use the provided Postman collection to test the API. The collection has pre-set variables. 
+
+#### Files:
+
+- `postman/user-support-api.postman_collection.json`
+
+#### Variables Used:
+
+| Variable             | Example Value          |
+|----------------------|------------------------|
+| `url`               | `http://localhost:8080`|
+| `conversationId`    | `1`                    |
+| `operator_username` | `operator`             |
+| `operator_password` | `operator_pass`        |
+| `customer_username` | `customer`             |
+| `customer_password` | `customer_pass`        |
+
+#### How to Use:
+
+1. Import the collection in Postman.
+2. Select a request and hit **Send** (authentication is already set with the variables for both customer and operator endpoints).
+
+---
+
+## Default Users (from `import.sql`)
+
+| Username  | Password       | Role     |
+|-----------|----------------|----------|
+| operator  | operator_pass  | OPERATOR |
+| customer  | customer_pass  | CUSTOMER |
+
+Users added using `import.sql` are also used in the Postman collection.
+
+---
+
+## Project Structure
+
+```bash
+.
+├── Dockerfile
+├── docker-compose.yml
+├── postman/
+│   └── user-support-api.postman_collection.json
+└── src/
 ```
-
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
-
-## Creating a native executable
-
-You can create a native executable using:
-
-```shell script
-./mvnw package -Dnative
-```
-
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
-
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./target/customer-support-app-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
-
-## Related Guides
-
-- Hibernate ORM ([guide](https://quarkus.io/guides/hibernate-orm)): Define your persistent model with Hibernate ORM and Jakarta Persistence
-- JDBC Driver - MySQL ([guide](https://quarkus.io/guides/datasource)): Connect to the MySQL database via JDBC
-- Hibernate Validator ([guide](https://quarkus.io/guides/validation)): Validate object properties (field, getter) and method parameters for your beans (REST, CDI, Jakarta Persistence)
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
