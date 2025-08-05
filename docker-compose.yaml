@@ -25,8 +25,8 @@ services:
       - QUARKUS_HTTP_PORT=8080
     ports:
       - "8080:8080"
-    command:
-      sh -c "until nc -z mysql 3306; do sleep 1; done && java -jar quarkus-run.jar"
+    command: >
+      sh -c "until nc -z mysql 3306; do sleep 1; done && java -Dquarkus.profile=dev -jar app/quarkus-run.jar"
 
 volumes:
   mysql_data:
