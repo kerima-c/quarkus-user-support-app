@@ -1,0 +1,350 @@
+{
+	"info": {
+		"_postman_id": "df4a8b09-5df9-40f1-89e0-ae612e4bea23",
+		"name": "User Support App",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "Rooms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/conversations/rooms",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"conversations",
+								"rooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get customer conversations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/conversations",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"conversations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get customer messages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/conversations/{{conversationId}}/messages",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"conversations",
+								"{{conversationId}}",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create conversation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"roomName\": \"SERVICES\",\r\n    \"message\": \"new service needed\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/conversations",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"conversations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add new message",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"second message\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/conversations/{{conversationId}}/messages",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"conversations",
+								"{{conversationId}}",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "basic",
+				"basic": [
+					{
+						"key": "password",
+						"value": "{{customer_password}}",
+						"type": "string"
+					},
+					{
+						"key": "username",
+						"value": "{{customer_username}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Operator",
+			"item": [
+				{
+					"name": "Get pending conversations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/conversations/pending",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"conversations",
+								"pending"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get taken conversations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/conversations/taken",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"conversations",
+								"taken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get conversation by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/conversations/{{conversationId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"conversations",
+								"{{conversationId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Take conversation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/conversations/{{conversationId}}/take",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"conversations",
+								"{{conversationId}}",
+								"take"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add new message",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"first reply - new service\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/conversations/{{conversationId}}/messages",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"conversations",
+								"{{conversationId}}",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "basic",
+				"basic": [
+					{
+						"key": "username",
+						"value": "{{operator_username}}",
+						"type": "string"
+					},
+					{
+						"key": "password",
+						"value": "{{operator_password}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "conversationId",
+			"value": "2",
+			"type": "default"
+		},
+		{
+			"key": "url",
+			"value": "http://localhost:8080",
+			"type": "default"
+		},
+		{
+			"key": "operator_username",
+			"value": "operator",
+			"type": "default"
+		},
+		{
+			"key": "operator_password",
+			"value": "operator_pass",
+			"type": "default"
+		},
+		{
+			"key": "customer_username",
+			"value": "customer",
+			"type": "default"
+		},
+		{
+			"key": "customer_password",
+			"value": "customer_pass",
+			"type": "default"
+		}
+	]
+}
