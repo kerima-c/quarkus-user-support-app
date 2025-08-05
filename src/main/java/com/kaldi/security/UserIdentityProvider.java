@@ -45,7 +45,7 @@ public class UserIdentityProvider implements IdentityProvider<UsernamePasswordAu
                 throw new AuthenticationFailedException("Invalid credentials");
             }
             User user = userOptional.get();
-            String role = user.getUserType().name().toLowerCase();
+            String role = user.getUserType().name();
 
             if (!passwordService.verify(password, user.getPassword())) {
                 throw new AuthenticationFailedException("Invalid credentials");

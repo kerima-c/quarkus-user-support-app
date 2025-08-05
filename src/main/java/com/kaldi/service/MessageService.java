@@ -16,8 +16,6 @@ public class MessageService {
     @Inject
     UserService userService;
     @Inject
-    ConversationService conversationService;
-    @Inject
     MessageRepository messageRepository;
     @Inject
     SecurityIdentity securityIdentity;

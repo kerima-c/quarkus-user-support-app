@@ -3,8 +3,6 @@ package com.kaldi.service;
 import com.kaldi.model.*;
 import com.kaldi.repository.ConversationRepository;
 import com.kaldi.repository.MessageRepository;
-import com.kaldi.repository.UserRepository;
-import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
