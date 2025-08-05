@@ -13,14 +13,11 @@ import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
-import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
 @ApplicationScoped
 public class UserIdentityProvider implements IdentityProvider<UsernamePasswordAuthenticationRequest> {
-    @Inject
-    UserService userService;
 
     @Inject
     UserRepository userRepository;

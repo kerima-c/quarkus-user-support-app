@@ -44,15 +44,6 @@ public class ConversationRest {
             @APIResponse(responseCode = "403", description = "Access denied (available only to operators)")
     })
     public Response getPendingConversations() {
-        User user = userService.getUser(securityIdentity.getPrincipal().getName());
-        if (user == null) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("User doesn't exist").build();
-        }
-
-        if (user.getUserType() != UserType.OPERATOR) {
-            return Response.status(Response.Status.FORBIDDEN).entity("User is not operator").build();
-        }
-
         List<ConversationDTO> pendingConversations = conversationService.getPendingConversations().stream().map(o -> new ConversationDTO(o.getCustomer().getUsername(), o.getRoom().name(), o.getCreatedAt())).toList();
 
         return Response.ok(new ConversationsDTO(pendingConversations)).build();
@@ -69,15 +60,6 @@ public class ConversationRest {
             @APIResponse(responseCode = "403", description = "Access denied (available only to operators)")
     })
     public Response getTakenConversations() {
-        User user = userService.getUser(securityIdentity.getPrincipal().getName());
-        if (user == null) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("User doesn't exist").build();
-        }
-
-        if (user.getUserType() != UserType.OPERATOR) {
-            return Response.status(Response.Status.FORBIDDEN).entity("User is not operator").build();
-        }
-
         List<ConversationDTO> takenConversations = conversationService.getTakenConversations().stream().map(o -> new ConversationDTO(o.getCustomer().getUsername(), o.getRoom().name(), o.getCreatedAt())).toList();
 
         return Response.ok(new ConversationsDTO(takenConversations)).build();
@@ -95,15 +77,6 @@ public class ConversationRest {
             @APIResponse(responseCode = "404", description = "Conversation not found")
     })
     public Response getConversationById(@PathParam("id") Long id) {
-        User user = userService.getUser(securityIdentity.getPrincipal().getName());
-        if (user == null) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("User doesn't exist").build();
-        }
-
-        if (user.getUserType() != UserType.OPERATOR) {
-            return Response.status(Response.Status.FORBIDDEN).entity("User is not operator").build();
-        }
-
         Conversation conversation = conversationService.getConversationById(id);
         if (conversation == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("Conversation doesn't exist").build();
@@ -126,15 +99,8 @@ public class ConversationRest {
     })
     public Response takeConversation(@PathParam("id") Long id) {
         User user = userService.getUser(securityIdentity.getPrincipal().getName());
-        if (user == null) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("User doesn't exist").build();
-        }
-
-        if (user.getUserType() != UserType.OPERATOR) {
-            return Response.status(Response.Status.FORBIDDEN).entity("User is not operator").build();
-        }
-
         Operator operator = (Operator) user;
+
         Conversation conversation = conversationService.getConversationById(id);
         if (conversation == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("Conversation doesn't exist").build();
@@ -164,9 +130,6 @@ public class ConversationRest {
     public Response postMessage(@PathParam("id") Long id, MessageDTO messageDTO) {
         String username = securityIdentity.getPrincipal().getName();
         User user = userService.getUser(username);
-        if (user == null) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("User doesn't exist").build();
-        }
 
         if (StringUtils.isNullOrEmpty(messageDTO.content())) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Message content can't be empty").build();
@@ -200,12 +163,6 @@ public class ConversationRest {
     })
     @Transactional
     public Response getRooms() {
-        String username = securityIdentity.getPrincipal().getName();
-        User user = userService.getUser(username);
-        if (user == null) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("User doesn't exist").build();
-        }
-
         List<RoomDTO> roomsDTOS = Room.ALL_ROOMS.stream().map(o -> new RoomDTO(o.name())).toList();
 
         return Response.ok(new RoomsDTO(roomsDTOS)).build();
@@ -221,12 +178,8 @@ public class ConversationRest {
     })
     public Response getCustomerConversations() {
         String username = securityIdentity.getPrincipal().getName();
-        User user = userService.getUser(username);
-        if (user == null) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("User doesn't exist").build();
-        }
+        Long customerId = userService.getUser(username).getId();
 
-        Long customerId = user.getId();
         List<ConversationDTO> conversationDTOS = conversationService.getCustomerConversations(customerId).stream().map(o -> new ConversationDTO(o.getCustomer().getUsername(), o.getRoom().name(), o.getCreatedAt())).toList();
 
         return Response.ok(new ConversationsDTO(conversationDTOS)).build();
@@ -246,9 +199,6 @@ public class ConversationRest {
     public Response getConversationMessages(@PathParam("id") Long id) {
         String username = securityIdentity.getPrincipal().getName();
         User user = userService.getUser(username);
-        if (user == null) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("User doesn't exist").build();
-        }
 
         Conversation conversation = conversationService.getConversationById(id);
         if (conversation == null) {
@@ -275,9 +225,6 @@ public class ConversationRest {
     public Response startConversation(StartConversationDTO startConversationDTO) {
         String username = securityIdentity.getPrincipal().getName();
         User user = userService.getUser(username);
-        if (user == null) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("User doesn't exist").build();
-        }
 
         if (StringUtils.isNullOrEmpty(startConversationDTO.roomName()) || StringUtils.isNullOrEmpty(startConversationDTO.message())) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Room and message can't be empty").build();
