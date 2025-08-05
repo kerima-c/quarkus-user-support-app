@@ -23,8 +23,8 @@ public class ConversationRepository implements PanacheRepository<Conversation> {
         return find("id", conversationId).firstResult();
     }
 
-    public List<Conversation> getCustomerConversations(Long conversationId) {
-        return list("id", conversationId);
+    public List<Conversation> getCustomerConversations(Long customerId) {
+        return list("customer.id", customerId);
     }
 
     @Transactional

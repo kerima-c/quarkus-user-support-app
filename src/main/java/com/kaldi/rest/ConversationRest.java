@@ -19,6 +19,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Path("/conversations")
 public class ConversationRest {
@@ -157,6 +158,7 @@ public class ConversationRest {
             @APIResponse(responseCode = "201", description = "Successfully added message"),
             @APIResponse(responseCode = "400", description = "Invalid message format"),
             @APIResponse(responseCode = "401", description = "Authentication required"),
+            @APIResponse(responseCode = "403", description = "Conversation not accessible"),
             @APIResponse(responseCode = "404", description = "Conversation not found")
     })
     public Response postMessage(@PathParam("id") Long id, MessageDTO messageDTO) {
@@ -173,6 +175,13 @@ public class ConversationRest {
         Conversation conversation = conversationService.getConversationById(id);
         if (conversation == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("Conversation doesn't exist").build();
+        }
+
+        UserType userType = user.getUserType();
+        if (userType == UserType.OPERATOR && conversation.getOperator() == null ||
+                userType == UserType.CUSTOMER && !Objects.equals(conversation.getCustomer().getId(), user.getId()) ||
+                userType == UserType.OPERATOR && !Objects.equals(conversation.getOperator().getId(), user.getId())) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Conversation is not accessible, can't add message").build();
         }
 
         messageService.createMessage(conversation, messageDTO.content(), new Date());
@@ -231,6 +240,7 @@ public class ConversationRest {
     @APIResponses({
             @APIResponse(responseCode = "200", description = "Messages retrieved"),
             @APIResponse(responseCode = "401", description = "Authentication required"),
+            @APIResponse(responseCode = "403", description = "Conversation not accessible"),
             @APIResponse(responseCode = "404", description = "Conversation not found")
     })
     public Response getConversationMessages(@PathParam("id") Long id) {
@@ -243,6 +253,9 @@ public class ConversationRest {
         Conversation conversation = conversationService.getConversationById(id);
         if (conversation == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("Conversation doesn't exist").build();
+        }
+        if (!Objects.equals(conversation.getCustomer().getId(), user.getId())) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Conversation is not accessible").build();
         }
 
         List<MessageDetailsDTO> messageDetailsDTOS = messageService.getMessagesForConversation(id).stream().map(o -> new MessageDetailsDTO(o.getContent(), o.getTimestamp(), o.getSender().getUsername())).toList();
